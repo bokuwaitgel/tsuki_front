@@ -22,47 +22,22 @@ export default function Services() {
   }, []);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("submit");
     setId("loading");
+    setResult({});
     e.preventDefault();
     if (!file) return;
-    console.log(file);
     try {
       let formdata = new FormData();
       formdata.append("prompt", question);
       formdata.append("image", file);
 
-      var config = {
-        method: "post",
-        url: "https://dev.mazaal.ai/api/sdk/pre-trained-models/22",
-        headers: {
-          "Access-Control-Allow-Credentials": true,
-          "Content-Type":
-            "multipart/form-data; boundary=<calculated when request is sent>",
-          Authorization: "mz-787925a6-60b6-4e2d-9f9b-5fdc67fa4c9c",
-        },
-        data: formdata,
-      };
-      await axios(config)
-        .then(function (response) {
-          console.log(JSON.stringify(response.data));
-          setId(JSON.stringify(response.data));
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-
-      // await fetch("https://dev.mazaal.ai/api/sdk/pre-trained-models/22", {
-      //   mode: "no-cors",
-      //   method: "POST",
-      //   headers: {
-      //     Authorization: "mz-787925a6-60b6-4e2d-9f9b-5fdc67fa4c9c",
-      //   },
-      //   body: formdata,
-      // })
-      //   .then((response) => response.text())
-      //   .then((result) => setId(result))
-      //   .catch((error) => setId(error));
+      await fetch("http://localhost:5000/question", {
+        method: "POST",
+        body: formdata,
+      })
+        .then((response) => response.json())
+        .then((result) => setId(result?.id))
+        .catch((error) => console.log("error", error));
     } catch (err) {
       setId("there was an error");
     }
@@ -90,21 +65,48 @@ export default function Services() {
             />
           </div>
           <div>
+            <div>
+              <label>custom file</label>
+            </div>
             <input
               type="file"
               onChange={(e) => setFile(e.target.files![0])}
               accept="image/*"
             />
           </div>
-          <button className="mt-2" type="submit">
+          <button
+            className="mt-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+            type="submit"
+          >
             Submit
           </button>
         </form>
       </div>
-      <div className="p-5">
-        <div>Result</div>
-        <div className="text-white">{id}</div>
-      </div>
+
+      {id !== "" && id !== "loading" && (
+        <div className="p-5">
+          <div>Get Result</div>
+          <button
+            className="mt-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+            onClick={async () => {
+              try {
+                const response = await axios.get(
+                  `http://localhost:5000/getResult?id=${id}`
+                );
+                setResult(response.data);
+              } catch (err) {
+                console.log(err);
+              }
+            }}
+          >
+            answer
+          </button>
+          <div>
+            <div>Answer: </div>
+            <div className="text-white">{JSON.stringify(result, null, 2)}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
