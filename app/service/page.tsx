@@ -9,6 +9,7 @@ export default function Services() {
   const [file, setFile] = useState<File>();
   const [id, setId] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [answerLoading, setAnswerLoading] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("what year is it?");
   const [result, setResult] = useState<object>();
 
@@ -82,17 +83,19 @@ export default function Services() {
           </button>
         </form>
       </div>
-
+      {id === "loading" && <div className="p-5">loading...</div>}
       {id !== "" && id !== "loading" && (
         <div className="p-5">
           <div>Get Result</div>
           <button
             className="mt-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
             onClick={async () => {
+              setAnswerLoading(true);
               try {
                 const response = await axios.get(
                   `http://localhost:5000/getResult?id=${id}`
                 );
+                setAnswerLoading(false);
                 setResult(response.data);
               } catch (err) {
                 console.log(err);
@@ -103,7 +106,13 @@ export default function Services() {
           </button>
           <div>
             <div>Answer: </div>
-            <div className="text-white">{JSON.stringify(result, null, 2)}</div>
+            {answerLoading ? (
+              <div>loading...</div>
+            ) : (
+              <div className="text-white">
+                {JSON.stringify(result, null, 2)}
+              </div>
+            )}
           </div>
         </div>
       )}
