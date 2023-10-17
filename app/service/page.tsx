@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 import test from "../../public/images/test.png";
 
@@ -27,21 +28,41 @@ export default function Services() {
     if (!file) return;
     console.log(file);
     try {
-      var formdata = new FormData();
+      let formdata = new FormData();
       formdata.append("prompt", question);
       formdata.append("image", file);
 
-      await fetch("https://dev.mazaal.ai/api/sdk/pre-trained-models/22", {
-        mode: "no-cors",
-        method: "POST",
+      var config = {
+        method: "post",
+        url: "https://dev.mazaal.ai/api/sdk/pre-trained-models/22",
         headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Content-Type":
+            "multipart/form-data; boundary=<calculated when request is sent>",
           Authorization: "mz-787925a6-60b6-4e2d-9f9b-5fdc67fa4c9c",
         },
-        body: formdata,
-      })
-        .then((response) => response.text())
-        .then((result) => setId(result))
-        .catch((error) => setId(error));
+        data: formdata,
+      };
+      await axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+          setId(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      // await fetch("https://dev.mazaal.ai/api/sdk/pre-trained-models/22", {
+      //   mode: "no-cors",
+      //   method: "POST",
+      //   headers: {
+      //     Authorization: "mz-787925a6-60b6-4e2d-9f9b-5fdc67fa4c9c",
+      //   },
+      //   body: formdata,
+      // })
+      //   .then((response) => response.text())
+      //   .then((result) => setId(result))
+      //   .catch((error) => setId(error));
     } catch (err) {
       setId("there was an error");
     }
@@ -82,7 +103,7 @@ export default function Services() {
       </div>
       <div className="p-5">
         <div>Result</div>
-        <div>{id}</div>
+        <div className="text-white">{id}</div>
       </div>
     </div>
   );
