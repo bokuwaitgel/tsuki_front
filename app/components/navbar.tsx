@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 import Link from "next/link";
 // import Logo from "./Logo";
@@ -14,22 +14,23 @@ const Navbar = () => {
             {/* <Logo /> */}
             <ul className="hidden md:flex gap-x-6 text-white">
               <li>
-                <div  className={`${active==='/' ? 'bg-slate-600' : 'bg-slate-900'}  px-4 py-2 border border-blue-500 rounded`} >
-                  <Link onClick={()=> setActive('/')} href="/" >
-                    <p>Home</p>
-                  </Link>
-                </div>
-              </li>
-              <li>
-                <div className={`${active==='/about' ? 'bg-slate-600' : 'bg-slate-900'}  px-4 py-2 border border-blue-500 rounded`} >
-                  <Link onClick={()=> setActive('/about')} href="/about" >
+                <div
+                  className={`${
+                    active === "/" ? "bg-slate-600" : "bg-slate-900"
+                  }  px-4 py-2 border border-blue-500 rounded`}
+                >
+                  <Link onClick={() => setActive("/")} href="/about">
                     <p>extractTable</p>
                   </Link>
                 </div>
               </li>
               <li>
-                <div className={`${active==='/service' ? 'bg-slate-600' : 'bg-slate-900'}  px-4 py-2 border border-blue-500 rounded`} >
-                  <Link onClick={()=> setActive('/service')} href="/service">
+                <div
+                  className={`${
+                    active === "/answer" ? "bg-slate-600" : "bg-slate-900"
+                  }  px-4 py-2 border border-blue-500 rounded`}
+                >
+                  <Link onClick={() => setActive("/service")} href="/service">
                     <p>Question&Answer</p>
                   </Link>
                 </div>

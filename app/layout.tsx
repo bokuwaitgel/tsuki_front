@@ -15,11 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className=" bg-slate-800 h-full">
       <body className="h-full">
         <Navbar />
         <div
-          className={`${inter.className} bg-slate-800 text-slate-100 w-full h-full np-4`}
+          className={`${inter.className}  text-slate-100 w-full h-auto  np-4`}
         >
           {children}
         </div>
