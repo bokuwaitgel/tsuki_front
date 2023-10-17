@@ -9,6 +9,7 @@ export default function Services() {
   const [file, setFile] = useState<File>();
   const [id, setId] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [tryAgain, setTryAgain] = useState<boolean>(false);
   const [answerLoading, setAnswerLoading] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("what year is it?");
   const [result, setResult] = useState<object>();
@@ -91,6 +92,7 @@ export default function Services() {
             className="mt-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
             onClick={async () => {
               setAnswerLoading(true);
+              setTryAgain(false);
               try {
                 const response = await axios.get(
                   `https://tsuki-backend-a9d1d8e56400.herokuapp.com//getResult?id=${id}`
@@ -98,6 +100,7 @@ export default function Services() {
                 setAnswerLoading(false);
                 setResult(response.data);
               } catch (err) {
+                setTryAgain(true);
                 console.log(err);
               }
             }}
@@ -106,7 +109,10 @@ export default function Services() {
           </button>
           <div>
             <div>Answer: </div>
-            {answerLoading ? (
+
+            {tryAgain ? (
+              <div>try again</div>
+            ) : answerLoading ? (
               <div>loading...</div>
             ) : (
               <div className="text-white">
