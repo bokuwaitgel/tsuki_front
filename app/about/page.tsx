@@ -1,7 +1,75 @@
-export default function About() {
+"use client";
+import Image from "next/image";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+import test from "../../public/images/test.png";
+
+export default function ExtractTable() {
+  const [file, setFile] = useState<File>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [tryAgain, setTryAgain] = useState<boolean>(false);
+  const [answerLoading, setAnswerLoading] = useState<boolean>(false);
+  const [question, setQuestion] = useState<string>("what year is it?");
+  const [result, setResult] = useState<string>();
+
+  useEffect(() => {
+    fetch(test.src)
+      .then((res) => res.blob())
+      .then((blob) => {
+        const file = new File([blob], "test.png", { type: "image/png" });
+        setFile(file);
+      });
+  }, []);
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setResult("loading");
+    e.preventDefault();
+    if (!file) return;
+    try {
+      let formdata = new FormData();
+      formdata.append("image", file);
+
+      await fetch("http://localhost:5000/extractTable", {
+        method: "POST",
+        body: formdata,
+      })
+        .then((response) => response.json())
+        .then((result) => setResult(result))
+        .catch((error) => console.log("error", error));
+    } catch (err) {
+      setResult("there was an error");
+    }
+  };
   return (
     <div>
-      <h1>About</h1>
+      <div className="p-5">
+        <div> extract Table </div>
+        <Image
+          src={file ? URL.createObjectURL(file) : test}
+          alt="Picture of the author"
+          width={500}
+          height={500}
+        />
+        <form onSubmit={onSubmit}>
+          <div>
+            <div>
+              <label>custom file</label>
+            </div>
+            <input
+              type="file"
+              onChange={(e) => setFile(e.target.files![0])}
+              accept="image/*"
+            />
+          </div>
+          <button
+            className="mt-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+            type="submit"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
