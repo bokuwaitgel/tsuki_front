@@ -27,7 +27,7 @@ const Navbar = () => {
               <li>
                 <div
                   className={`${
-                    active === "/answer" ? "bg-slate-600" : "bg-slate-900"
+                    active === "/service" ? "bg-slate-600" : "bg-slate-900"
                   }  px-4 py-2 border border-blue-500 rounded`}
                 >
                   <Link onClick={() => setActive("/service")} href="/service">
