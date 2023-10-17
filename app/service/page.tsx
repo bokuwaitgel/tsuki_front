@@ -32,7 +32,7 @@ export default function Services() {
       formdata.append("prompt", question);
       formdata.append("image", file);
 
-      await fetch("http://localhost:5000/question", {
+      await fetch("https://tsuki-backend-a9d1d8e56400.herokuapp.com/question", {
         method: "POST",
         body: formdata,
       })
@@ -93,7 +93,7 @@ export default function Services() {
               setAnswerLoading(true);
               try {
                 const response = await axios.get(
-                  `http://localhost:5000/getResult?id=${id}`
+                  `https://tsuki-backend-a9d1d8e56400.herokuapp.com//getResult?id=${id}`
                 );
                 setAnswerLoading(false);
                 setResult(response.data);
