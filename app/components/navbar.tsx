@@ -19,8 +19,8 @@ const Navbar = () => {
                     active === "/" ? "bg-slate-600" : "bg-slate-900"
                   }  px-4 py-2 border border-blue-500 rounded`}
                 >
-                  <Link onClick={() => setActive("/")} href="/about">
-                    <p>extractTable</p>
+                  <Link onClick={() => setActive("/")} href="/imageToMn">
+                    <p>imageToMongolian</p>
                   </Link>
                 </div>
               </li>
@@ -31,7 +31,7 @@ const Navbar = () => {
                   }  px-4 py-2 border border-blue-500 rounded`}
                 >
                   <Link onClick={() => setActive("/service")} href="/service">
-                    <p>Question&Answer</p>
+                    <p>idk</p>
                   </Link>
                 </div>
               </li>

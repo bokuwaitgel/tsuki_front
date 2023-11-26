@@ -8,10 +8,7 @@ import test from "../../public/images/test.png";
 export default function ExtractTable() {
   const [file, setFile] = useState<File>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [tryAgain, setTryAgain] = useState<boolean>(false);
-  const [answerLoading, setAnswerLoading] = useState<boolean>(false);
-  const [question, setQuestion] = useState<string>("what year is it?");
-  const [result, setResult] = useState<Array<any>>([]);
+  const [result, setResult] = useState<string>("");
   const [resultText, setResultText] = useState<string>("");
 
   useEffect(() => {
@@ -31,20 +28,17 @@ export default function ExtractTable() {
       let formdata = new FormData();
       formdata.append("image", file);
 
-      await fetch(
-        "https://tsuki-backend-a9d1d8e56400.herokuapp.com/extractTable",
-        {
-          method: "POST",
-          body: formdata,
-        }
-      )
+      await fetch("http://127.0.0.1:5000/toMongolian", {
+        method: "POST",
+        body: formdata,
+      })
         .then((response) => response.json())
         .then((result) => {
-          setResult(result?.tables);
-          setResultText(JSON.stringify(result, null, 2));
+          console.log(result);
+          setResult(result.mon);
+          setResultText(result.bicig);
         })
         .catch((error) => console.log("error", error));
-      console.log(result);
     } catch (err) {
       setResultText("there was an error");
     }
@@ -84,42 +78,12 @@ export default function ExtractTable() {
           {resultText === "loading..." ? (
             <div> loading... </div>
           ) : (
-            <div> {resultText} </div>
+            <div>
+              <div> {resultText} </div>
+              <div> {result} </div>
+            </div>
           )}
         </div>
-
-        {result && result.length > 0 ? (
-          <div>
-            <div className="text-lg pt-10">Table Result: </div>
-            <div>
-              {result.map((table, index) => (
-                <div
-                  className="relative overflow-x-auto shadow-md sm:rounded-lg p-5"
-                  tabIndex={index}
-                  key={index}
-                >
-                  <div className="p-10">{`Table number: ${index + 1}`}</div>
-                  <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    {table.map((row: any, index: number) => (
-                      <tr
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                        key={index}
-                      >
-                        {row.map((col: any, index: number) => (
-                          <td className="px-6 py-4" key={index}>
-                            {col}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </table>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="text-lg pt-10"> No result </div>
-        )}
       </div>
     </div>
   );
